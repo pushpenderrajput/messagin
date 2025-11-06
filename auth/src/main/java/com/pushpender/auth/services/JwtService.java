@@ -40,6 +40,7 @@ public class JwtService {
     }
 
     public String generateToken(String email) {
+
         return generateToken(new HashMap<>(), email);
     }
 
