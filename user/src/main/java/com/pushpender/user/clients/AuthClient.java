@@ -5,32 +5,32 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 @Component
 public class AuthClient {
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
+
     @Value("${auth.service.url}")
     private String authServiceUrl;
 
-    public AuthClient() {
-        this.restTemplate = new RestTemplate();
-    }
-
-    public boolean validateToken(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
+    public Map<String, Object> validateToken(String token) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + token);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<Map> response = restTemplate.exchange(
                     authServiceUrl + "/api/auth/validate",
                     HttpMethod.GET,
                     entity,
-                    String.class
+                    Map.class
             );
-            return response.getStatusCode().is2xxSuccessful();
-        } catch (Exception ex) {
-            return false;
+
+            return response.getBody();
+        } catch (Exception e) {
+            return null;
         }
     }
 }

@@ -4,18 +4,18 @@ import com.pushpender.user.clients.AuthClient;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class AuthInterceptor implements Filter {
+    @Autowired
+    private AuthClient authClient;
 
-    private final AuthClient authClient;
 
-    public AuthInterceptor(AuthClient authClient) {
-        this.authClient = authClient;
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -26,7 +26,6 @@ public class AuthInterceptor implements Filter {
 
         String authHeader = req.getHeader("Authorization");
 
-        // Allow open endpoints (if any)
         if (req.getRequestURI().startsWith("/actuator") || req.getMethod().equalsIgnoreCase("OPTIONS")) {
             chain.doFilter(request, response);
             return;
@@ -38,13 +37,16 @@ public class AuthInterceptor implements Filter {
         }
 
         String token = authHeader.substring(7);
-        boolean valid = authClient.validateToken(token);
+        Map<String, Object> validation = authClient.validateToken(token);
 
-        if (!valid) {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+        if (validation == null || !(Boolean) validation.get("valid")) {
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
             return;
         }
 
-        chain.doFilter(request, response);
+        String email = (String) validation.get("email");
+        req.setAttribute("email", email);
+
+        chain.doFilter(req, res);
     }
 }
