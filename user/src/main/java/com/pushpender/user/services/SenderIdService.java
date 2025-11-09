@@ -1,8 +1,8 @@
 package com.pushpender.user.services;
 
 
-import com.pushpender.user.dtos.CreateSenderIdRequest;
-import com.pushpender.user.dtos.SenderIdDto;
+import com.pushpender.user.dtos.SenderIdDtos.CreateSenderIdRequest;
+import com.pushpender.user.dtos.SenderIdDtos.SenderIdDto;
 import com.pushpender.user.entities.SenderId;
 import com.pushpender.user.repositories.SenderIdRepository;
 import org.springframework.beans.factory.annotation.Autowired;

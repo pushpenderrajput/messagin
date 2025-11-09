@@ -1,4 +1,4 @@
-package com.pushpender.user.dtos;
+package com.pushpender.user.dtos.UserDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

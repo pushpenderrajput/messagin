@@ -1,7 +1,7 @@
 package com.pushpender.user.controllers;
 
-import com.pushpender.user.dtos.UserProfileReqDto;
-import com.pushpender.user.dtos.UserProfileResDto;
+import com.pushpender.user.dtos.UserDtos.UserProfileReqDto;
+import com.pushpender.user.dtos.UserDtos.UserProfileResDto;
 import com.pushpender.user.services.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package com.pushpender.user.controllers;
 
-import com.pushpender.user.dtos.CreateSenderIdRequest;
-import com.pushpender.user.dtos.SenderIdDto;
+import com.pushpender.user.dtos.SenderIdDtos.CreateSenderIdRequest;
+import com.pushpender.user.dtos.SenderIdDtos.SenderIdDto;
 import com.pushpender.user.entities.SenderId;
 import com.pushpender.user.services.SenderIdService;
 import jakarta.servlet.http.HttpServletRequest;

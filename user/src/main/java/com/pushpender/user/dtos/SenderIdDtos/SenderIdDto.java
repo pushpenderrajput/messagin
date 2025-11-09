@@ -1,4 +1,4 @@
-package com.pushpender.user.dtos;
+package com.pushpender.user.dtos.SenderIdDtos;
 
 import com.pushpender.user.entities.SenderId;
 import lombok.Builder;

@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface SenderIdRepository extends JpaRepository<SenderId, Long> {
     List<SenderId> findByCreatedBy(String email);
+    SenderId findByName(String name);
 }

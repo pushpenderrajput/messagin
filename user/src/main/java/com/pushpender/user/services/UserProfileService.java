@@ -1,7 +1,7 @@
 package com.pushpender.user.services;
 
-import com.pushpender.user.dtos.UserProfileReqDto;
-import com.pushpender.user.dtos.UserProfileResDto;
+import com.pushpender.user.dtos.UserDtos.UserProfileReqDto;
+import com.pushpender.user.dtos.UserDtos.UserProfileResDto;
 import com.pushpender.user.entities.UserProfile;
 import com.pushpender.user.repositories.UserProfileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
