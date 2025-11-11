@@ -28,6 +28,7 @@ public class TemplateController {
         String email = (String) request.getAttribute("email");
         return ResponseEntity.ok(service.createTemplate(email, req));
     }
+
     @PutMapping("/edit/{id}")
     public ResponseEntity<TemplateResponseDto> editTemplate( @PathVariable Long id ,
             @RequestBody TemplateRequestDto req,
@@ -35,6 +36,12 @@ public class TemplateController {
         String email = (String) request.getAttribute("email");
         return ResponseEntity.ok(service.editTemplate(email, id, req));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<TemplateResponseDto> getTemplateById(@PathVariable Long id) {
+        var response = service.getById(id);
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping
     public ResponseEntity<List<TemplateResponseDto>> listTemplates(HttpServletRequest request) {

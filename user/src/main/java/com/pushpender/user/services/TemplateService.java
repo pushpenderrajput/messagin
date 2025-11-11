@@ -75,6 +75,20 @@ public class TemplateService {
                 .build();
     }
 
+    public TemplateResponseDto getById(Long id) {
+        var template = templateRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Template not found"));
+
+        return TemplateResponseDto.builder()
+                .id(template.getId())
+                .title(template.getTitle())
+                .content(template.getContent())
+                .status(template.getStatus())
+                .senderName(template.getSenderId().getName())
+                .createdBy(template.getSenderId().getCreatedBy())
+                .build();
+    }
+
 
     public List<TemplateResponseDto> listUserTemplates(String email) {
         return templateRepo.findBySenderId_CreatedBy(email)

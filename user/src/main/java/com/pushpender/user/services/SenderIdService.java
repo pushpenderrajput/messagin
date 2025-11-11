@@ -35,6 +35,18 @@ public class SenderIdService {
                 .status(saved.getStatus())
                 .build();
     }
+    public SenderIdDto getById(Long id) {
+        var sender = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender ID not found"));
+
+        return SenderIdDto.builder()
+                .id(sender.getId())
+                .name(sender.getName())
+                .status(sender.getStatus())
+                .createdBy(sender.getCreatedBy())
+                .build();
+    }
+
 
     public List<SenderIdDto> listSenderIds(String email){
         return repo.findByCreatedBy(email).stream()

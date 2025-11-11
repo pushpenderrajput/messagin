@@ -35,6 +35,12 @@ public class SenderIdController {
         String email = (String) request.getAttribute("email");
         return ResponseEntity.ok(service.listSenderIds(email));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<SenderIdDto> getSenderIdById(@PathVariable Long id) {
+        var response = service.getById(id);
+        return ResponseEntity.ok(response);
+    }
+
 
 
     @GetMapping("/admin")
