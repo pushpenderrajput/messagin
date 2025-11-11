@@ -1,6 +1,7 @@
 package com.pushpender.reminder.services;
 
 import com.pushpender.reminder.clients.UserClient;
+import com.pushpender.reminder.dtos.contactDto.ContactDto;
 import com.pushpender.reminder.dtos.reminderDtos.CreateReminderRequestDto;
 import com.pushpender.reminder.dtos.reminderDtos.ReminderResponseDto;
 import com.pushpender.reminder.entities.Reminder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class ReminderService {
     @Autowired
     private UserClient userClient;
 
-    public ReminderResponseDto createReminder(String email, String token, CreateReminderRequestDto req) {
+    public List<ReminderResponseDto> createReminder(String email, String token, CreateReminderRequestDto req) {
 
         if (req.getScheduledAt().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Scheduled time must be in the future");
@@ -47,38 +49,41 @@ public class ReminderService {
         if (!"APPROVED".equals(template.get("status"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Template not approved");
         }
-
-        String content = (String) template.get("content");
-        if (req.getVariables() != null) {
-            for (Map.Entry<String, String> entry : req.getVariables().entrySet()) {
-                content = content.replace("{" + entry.getKey() + "}", entry.getValue());
+        List<ReminderResponseDto> responses = new ArrayList<>();
+        for (ContactDto contact : req.getContacts()) {
+            String content = (String) template.get("content");
+            if (contact.getVariables() != null) {
+                for (Map.Entry<String, String> entry : contact.getVariables().entrySet()) {
+                    content = content.replace("{" + entry.getKey() + "}", entry.getValue());
+                }
             }
+
+            Reminder reminder = Reminder.builder()
+                    .title(req.getTitle())
+                    .recipientName(contact.getRecipientName())
+                    .recipientPhone(contact.getRecipientPhone())
+                    .message(content)
+                    .senderId(req.getSenderId())
+                    .templateId(req.getTemplateId())
+                    .scheduledAt(req.getScheduledAt())
+                    .status(Reminder.Status.SCHEDULED)
+                    .createdBy(email)
+                    .build();
+
+            Reminder saved = reminderRepository.save(reminder);
+
+            responses.add(ReminderResponseDto.builder()
+                    .id(saved.getId())
+                    .title(saved.getTitle())
+                    .recipientName(saved.getRecipientName())
+                    .recipientPhone(saved.getRecipientPhone())
+                    .message(saved.getMessage())
+                    .status(saved.getStatus())
+                    .scheduledAt(saved.getScheduledAt())
+                    .createdBy(saved.getCreatedBy())
+                    .build());
         }
-
-        Reminder reminder = Reminder.builder()
-                .title(req.getTitle())
-                .recipientName(req.getRecipientName())
-                .recipientPhone(req.getRecipientPhone())
-                .message(content)
-                .senderId(req.getSenderId())
-                .templateId(req.getTemplateId())
-                .scheduledAt(req.getScheduledAt())
-                .status(Reminder.Status.SCHEDULED)
-                .createdBy(email)
-                .build();
-
-        Reminder saved = reminderRepository.save(reminder);
-
-        return ReminderResponseDto.builder()
-                .id(saved.getId())
-                .title(saved.getTitle())
-                .recipientName(saved.getRecipientName())
-                .recipientPhone(saved.getRecipientPhone())
-                .message(saved.getMessage())
-                .status(saved.getStatus())
-                .scheduledAt(saved.getScheduledAt())
-                .createdBy(saved.getCreatedBy())
-                .build();
+        return responses;
     }
 
     public List<ReminderResponseDto> listUserReminders(String email) {

@@ -20,17 +20,15 @@ public class ReminderController {
 
 
     @PostMapping
-    public ResponseEntity<ReminderResponseDto> createReminder(
-            @Valid @RequestBody CreateReminderRequestDto dto,
+    public ResponseEntity<List<ReminderResponseDto>> createReminders(
+            @RequestBody CreateReminderRequestDto req,
             HttpServletRequest request) {
-
         String email = (String) request.getAttribute("email");
-        String authHeader = request.getHeader("Authorization");
-        String token = authHeader.substring(7);
-
-        var response = reminderService.createReminder(email, token, dto);
+        String token = request.getHeader("Authorization").substring(7);
+        var response = reminderService.createReminder(email, token, req);
         return ResponseEntity.ok(response);
     }
+
 
 
     @GetMapping

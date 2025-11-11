@@ -26,9 +26,9 @@ public class TwilioConfig {
     public void initTwilio() {
         if (enabled) {
             Twilio.init(accountSid, authToken);
-            System.out.println("✅ Twilio initialized successfully.");
+            System.out.println("Twilio initialized successfully.");
         } else {
-            System.out.println("⚙️ Twilio disabled — running in simulation mode.");
+            System.out.println("Twilio disabled — running in simulation mode.");
         }
     }
 }

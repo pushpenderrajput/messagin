@@ -20,7 +20,7 @@ public class SmsService {
         if (twilioConfig.isEnabled()) {
             return twilioSmsService.sendSms(reminder);
         } else {
-            log.info("📩 Simulated SMS: To={} | Msg={}", reminder.getRecipientPhone(), reminder.getMessage());
+            log.info("Simulated SMS: To={} | Msg={}", reminder.getRecipientPhone(), reminder.getMessage());
             return true;
         }
     }

@@ -19,7 +19,7 @@ public class TwilioSmsService {
 
     public boolean sendSms(Reminder reminder) {
         if (!twilioConfig.isEnabled()) {
-            log.info("⚙️ Twilio disabled — simulation mode active.");
+            log.info("Twilio disabled — simulation mode active.");
             return true;
         }
 
@@ -29,20 +29,19 @@ public class TwilioSmsService {
                             new PhoneNumber(twilioConfig.getFromNumber()),
                             reminder.getMessage()
                     )
-                    // Optional: webhook URL for delivery reports
-                    .setStatusCallback("https://your-domain.com/api/reminders/delivery-callback")
+//                    .setStatusCallback("https://your-domain.com/api/reminders/delivery-callback")
                     .create();
 
             reminder.setTwilioSid(message.getSid());
             reminder.setDeliveryStatus(message.getStatus().toString());
             reminder.setLastDeliveryUpdate(LocalDateTime.now());
 
-            log.info("📤 Sent SMS via Twilio: SID={}, To={}, Status={}",
+            log.info("Sent SMS via Twilio: SID={}, To={}, Status={}",
                     message.getSid(), reminder.getRecipientPhone(), message.getStatus());
             return true;
 
         } catch (Exception e) {
-            log.error("❌ Twilio SMS send failed to {} — {}", reminder.getRecipientPhone(), e.getMessage());
+            log.error("Twilio SMS send failed to {} — {}", reminder.getRecipientPhone(), e.getMessage());
             reminder.setDeliveryStatus("FAILED");
             reminder.setLastDeliveryUpdate(LocalDateTime.now());
             return false;

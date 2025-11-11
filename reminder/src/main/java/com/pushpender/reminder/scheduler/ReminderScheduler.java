@@ -23,7 +23,7 @@ public class ReminderScheduler {
 
     @Scheduled(fixedRate = 60000)
     public void processDueReminders() {
-        log.info("⏰ Scheduler triggered at {}", LocalDateTime.now());
+        log.info("Scheduler triggered at {}", LocalDateTime.now());
 
         List<Reminder> dueReminders = reminderRepository
                 .findByStatusAndScheduledAtBefore(Reminder.Status.SCHEDULED, LocalDateTime.now());
@@ -40,10 +40,10 @@ public class ReminderScheduler {
 
             if (sent) {
                 reminder.setStatus(Reminder.Status.SENT);
-                log.info("✅ Reminder {} sent successfully to {}", reminder.getId(), reminder.getRecipientPhone());
+                log.info("Reminder {} sent successfully to {}", reminder.getId(), reminder.getRecipientPhone());
             } else {
                 reminder.setStatus(Reminder.Status.FAILED);
-                log.warn("⚠️ Reminder {} failed to send to {}", reminder.getId(), reminder.getRecipientPhone());
+                log.warn("Reminder {} failed to send to {}", reminder.getId(), reminder.getRecipientPhone());
             }
 
             reminderRepository.save(reminder);
